@@ -1,100 +1,136 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const currentYear = new Date().getFullYear();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return (
+    <div className="min-h-screen relative overflow-hidden">
+      <div className="absolute inset-0 gradient-background opacity-30" />
+
+      <header className="relative z-10 p-6">
+        <nav className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold">BazaarLink</h1>
+          <div className="flex gap-4">
+            <Button variant="ghost" asChild>
+              <Link href="/entrar">Entrar</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/cadastro">Cadastrar</Link>
+            </Button>
+          </div>
+        </nav>
+      </header>
+
+      <main className="relative container mx-auto px-6 py-24 flex min-h-[calc(100vh-160px)] items-center">
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
+          <div className="space-y-8">
+            <div className="space-y-6">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
+                Descubra Itens Únicos em Bazares Digitais
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Conecte-se com vendedores locais, encontre tesouros únicos e
+                construa sua comunidade no marketplace digital mais vibrante do
+                mundo.
+              </p>
+            </div>
+
+            <div className="space-y-4 md:space-y-6">
+              <p className="text-lg">
+                ✨ Milhares de itens exclusivos esperando por você
+              </p>
+              <p className="text-lg">
+                🤝 Conecte-se diretamente com vendedores apaixonados
+              </p>
+              <p className="text-lg">
+                💫 Descubra histórias únicas em cada produto
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="w-full sm:w-auto" asChild>
+                <Link href="/explorar">Começar a Explorar</Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto"
+                asChild
+              >
+                <Link href="/criar-bazar">Criar seu Bazar</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="relative hidden lg:block">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-float">
+              <div className="w-80 h-80 rounded-full bg-gradient-to-r from-yellow-300 to-red-500 opacity-75 blur-xl" />
+            </div>
+            <div className="absolute top-1/4 right-0 animate-float delay-1000">
+              <div className="w-40 h-40 rounded-full bg-gradient-to-r from-primary to-orange-500 opacity-60 blur-lg" />
+            </div>
+            <div className="absolute bottom-1/4 left-0 animate-float delay-2000">
+              <div className="w-56 h-56 rounded-full bg-gradient-to-r from-red-400 to-yellow-400 opacity-60 blur-lg" />
+            </div>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      <section className="relative z-10 container mx-auto px-6 py-24">
+        <div className="grid gap-12 lg:grid-cols-3">
+          <div className="space-y-4">
+            <h3 className="text-2xl font-bold">Para Compradores</h3>
+            <p className="text-muted-foreground">
+              Explore uma seleção única de produtos, conecte-se com vendedores
+              locais e encontre verdadeiros tesouros.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-2xl font-bold">Para Vendedores</h3>
+            <p className="text-muted-foreground">
+              Crie seu bazar digital, alcance mais clientes e faça parte de uma
+              comunidade vibrante de empreendedores.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-2xl font-bold">Comunidade</h3>
+            <p className="text-muted-foreground">
+              Compartilhe histórias, troque experiências e faça parte de um
+              movimento que valoriza o comércio local.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer className="relative z-10 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex flex-col gap-4 py-10 md:flex-row md:justify-between">
+          <div className="flex flex-col gap-4 md:gap-2">
+            <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+              &copy; {currentYear} BazaarLink. Todos os direitos reservados.
+            </p>
+          </div>
+          <nav className="flex gap-4 md:gap-6">
+            <Link
+              href="/sobre"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Sobre
+            </Link>
+            <Link
+              href="/termos"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Termos
+            </Link>
+            <Link
+              href="/privacidade"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Privacidade
+            </Link>
+          </nav>
+        </div>
       </footer>
     </div>
   );
