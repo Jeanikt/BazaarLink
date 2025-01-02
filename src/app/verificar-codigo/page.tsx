@@ -4,47 +4,63 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase";
 
 export default function VerificarCodigo() {
   const router = useRouter();
-  const [codigo, setCodigo] = useState("");
+  const [codigo, setCodigo] = useState(Array(6).fill(""));
   const [verificando, setVerificando] = useState(false);
+  const [erro, setErro] = useState(""); // Estado para exibir erros
+
+  const handleInputChange = (value: string, index: number) => {
+    if (/^\d?$/.test(value)) {
+      const updatedCodigo = [...codigo];
+      updatedCodigo[index] = value;
+      setCodigo(updatedCodigo);
+
+      if (value && index < 5) {
+        const nextInput = document.getElementById(`codigo-${index + 1}`);
+        nextInput?.focus();
+      }
+    }
+  };
 
   async function verificarCodigo(e: React.FormEvent) {
     e.preventDefault();
     setVerificando(true);
+    setErro(""); // Limpar o erro antes de verificar
+
+    const joinedCodigo = codigo.join(""); // Combinar os dígitos
 
     try {
       const { data, error } = await supabase
         .from("verification_codes")
         .select("*")
-        .eq("code", codigo)
+        .eq("code", joinedCodigo)
         .gt("expires_at", new Date().toISOString())
         .single();
 
-      if (error || !data) throw new Error("Código inválido ou expirado");
+      if (error || !data) {
+        throw new Error("Código inválido ou expirado");
+      }
 
-      // Create user in Supabase
       const { error: userError } = await supabase.auth.signUp({
         email: data.email,
-        password: codigo, // Use the verification code as a temporary password
+        password: joinedCodigo,
       });
 
       if (userError) throw userError;
 
-      // Delete the used verification code
       await supabase
         .from("verification_codes")
         .delete()
         .eq("email", data.email)
-        .eq("code", codigo);
+        .eq("code", joinedCodigo);
 
       router.push("/feed");
     } catch (error) {
-      alert("Erro ao verificar o código. Por favor, tente novamente.");
+      setErro("O código inserido é inválido ou expirou."); // Atualizar o estado de erro
     } finally {
       setVerificando(false);
     }
@@ -58,16 +74,32 @@ export default function VerificarCodigo() {
         </CardHeader>
         <CardContent>
           <form onSubmit={verificarCodigo} className="space-y-4">
-            <div className="space-y-2">
-              <Input
-                type="text"
-                placeholder="Código de verificação"
-                value={codigo}
-                onChange={(e) => setCodigo(e.target.value)}
-                required
-              />
+            <div className="flex justify-center gap-2">
+              {codigo.map((digit, index) => (
+                <input
+                  key={index}
+                  id={`codigo-${index}`}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleInputChange(e.target.value, index)}
+                  aria-label={`Digite o dígito ${index + 1} do código`}
+                  className="w-12 h-12 text-center text-lg font-medium border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+                />
+              ))}
             </div>
-            <Button type="submit" className="w-full" disabled={verificando}>
+
+            {erro && (
+              <div className="text-red-500 text-sm text-center mt-2">
+                {erro}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full mt-4"
+              disabled={verificando}
+            >
               {verificando ? "Verificando..." : "Verificar código"}
             </Button>
           </form>
