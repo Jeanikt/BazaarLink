@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -6,29 +7,44 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase";
+import { Github } from "lucide-react";
 
 export default function Entrar() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [carregando, setCarregando] = useState(false);
+  const [enviandoCodigo, setEnviandoCodigo] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function enviarCodigoVerificacao(e: React.FormEvent) {
     e.preventDefault();
-    setCarregando(true);
+    setEnviandoCodigo(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: senha,
+    try {
+      const response = await fetch("/api/send-verification-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok)
+        throw new Error("Falha ao enviar o código de verificação");
+
+      router.push("/verificar-codigo");
+    } catch (error: any) {
+      alert(`Erro ao enviar o código de verificação: ${error.message}`);
+    } finally {
+      setEnviandoCodigo(false);
+    }
+  }
+
+  async function loginComGithub() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
     });
 
     if (error) {
-      alert(error.message);
-    } else {
-      router.push("/feed");
+      console.error("GitHub login error:", error);
+      alert("Erro ao fazer login com GitHub. Por favor, tente novamente.");
     }
-
-    setCarregando(false);
   }
 
   return (
@@ -38,7 +54,7 @@ export default function Entrar() {
           <CardTitle>Entrar no BazaarLink</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={enviarCodigoVerificacao} className="space-y-4">
             <div className="space-y-2">
               <Input
                 type="email"
@@ -48,19 +64,21 @@ export default function Entrar() {
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Input
-                type="password"
-                placeholder="Senha"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={carregando}>
-              {carregando ? "Entrando..." : "Entrar"}
+            <Button type="submit" className="w-full" disabled={enviandoCodigo}>
+              {enviandoCodigo ? "Enviando..." : "Enviar código de verificação"}
             </Button>
           </form>
+          <div className="mt-4">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={loginComGithub}
+            >
+              <Github className="mr-2 h-4 w-4" />
+              Entrar com GitHub
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

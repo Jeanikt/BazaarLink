@@ -2,7 +2,14 @@ import { createClient } from "@supabase/supabase-js";
 
 export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
+  }
 );
 
 export type Database = {
@@ -126,6 +133,25 @@ export type Database = {
         Update: {
           user_id?: number;
           bazar_id?: number;
+        };
+      };
+      verification_codes: {
+        Row: {
+          id: number;
+          email: string;
+          code: string;
+          expires_at: string;
+          created_at: string;
+        };
+        Insert: {
+          email: string;
+          code: string;
+          expires_at: string;
+        };
+        Update: {
+          email?: string;
+          code?: string;
+          expires_at?: string;
         };
       };
     };
