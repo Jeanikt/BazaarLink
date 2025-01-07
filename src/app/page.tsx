@@ -129,6 +129,12 @@ export default function Home() {
             >
               Privacidade
             </Link>
+            <Link
+              href="https://github.com/Jeanikt"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Jeazy
+            </Link>
           </nav>
         </div>
       </footer>
