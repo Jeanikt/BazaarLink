@@ -117,18 +117,7 @@ export default function Home() {
             >
               Sobre
             </Link>
-            <Link
-              href="/termos"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Termos
-            </Link>
-            <Link
-              href="/privacidade"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Privacidade
-            </Link>
+            
           </nav>
         </div>
       </footer>
